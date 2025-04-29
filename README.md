@@ -2,6 +2,29 @@
 
 This repository contains a demo application that showcases AI observability using OpenLIT, OpenAI, and ChromaDB. The application makes API calls to OpenAI and performs vector database operations while being monitored by OpenLIT.
 
+## Architecture
+
+```mermaid
+graph TD
+    A[Demo App] -->|Makes API Calls| B[OpenAI]
+    A -->|Stores/Queries Data| C[ChromaDB]
+    A -->|Sends Telemetry| D[OpenLIT]
+    D -->|Forwards Metrics| E[Grafana Cloud]
+    E -->|Visualizes| F[Dashboard]
+
+    subgraph "Kubernetes Cluster"
+        A
+    end
+
+    subgraph "External Services"
+        B
+        C
+        D
+        E
+        F
+    end
+```
+
 ## Prerequisites
 
 - Kubernetes cluster
