@@ -2,78 +2,29 @@
 
 This repository contains a demo application that showcases AI observability using OpenLIT, OpenAI, and ChromaDB. The application makes API calls to OpenAI and performs vector database operations while being monitored by OpenLIT.
 
-## Architecture
+## What This Demo Shows
 
-```mermaid
-graph TD
-    A[Demo App] -->|Makes API Calls| B[OpenAI]
-    A -->|Stores/Queries Data| C[ChromaDB]
-    A -->|Sends Telemetry| D[OpenLIT]
-    D -->|Forwards Metrics| E[Grafana Cloud]
-    E -->|Visualizes| F[Dashboard]
+This demo application demonstrates:
 
-    subgraph "Kubernetes Cluster"
-        A
-    end
+1. Integration with OpenAI's API (GPT-3.5-turbo and GPT-4)
+2. Vector database operations using ChromaDB
+3. AI observability using OpenLIT
+4. Telemetry collection and visualization with Grafana Cloud
 
-    subgraph "External Services"
-        B
-        C
-        D
-        E
-        F
-    end
-```
+## Deployment Options
+
+Choose your preferred deployment method:
+
+1. [Docker Compose](docker/README.md) - For local development and testing
+2. [Kubernetes](kubernetes/README.md) - For production deployments
 
 ## Prerequisites
 
-- Kubernetes cluster
-- kubectl configured to access your cluster
 - Access to OpenAI API
 - Access to Grafana Cloud (for observability)
-
-## Configuration
-
-### 1. Set up Secrets
-
-Create a Kubernetes secret with the following values:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: demo-app
-type: Opaque
-data:
-  OTEL_EXPORTER_OTLP_ENDPOINT: <base64-encoded-grafana-otlp-endpoint>
-  OTEL_EXPORTER_OTLP_HEADERS: <base64-encoded-grafana-otlp-headers>
-  OPENAI_API_KEY: <base64-encoded-openai-api-key>
-```
-
-To encode your values in base64, you can use:
-```bash
-echo -n "your-value" | base64
-```
-
-Replace the following placeholders:
-- `<base64-encoded-grafana-otlp-endpoint>`: Your Grafana Cloud OTLP endpoint (base64 encoded)
-- `<base64-encoded-grafana-otlp-headers>`: Your Grafana Cloud OTLP headers (base64 encoded)
-- `<base64-encoded-openai-api-key>`: Your OpenAI API key (base64 encoded)
-
-### 2. Deploy the Application
-
-Apply the Kubernetes manifests in the following order:
-
-```bash
-# Apply the secret
-kubectl apply -f kubernetes/secret.yaml
-
-# Apply the configmap
-kubectl apply -f kubernetes/configmap.yaml
-
-# Apply the deployment
-kubectl apply -f kubernetes/deployment.yaml
-```
+- Choose your deployment method:
+  - For Docker: Docker and Docker Compose
+  - For Kubernetes: Kubernetes cluster and kubectl
 
 ## Application Details
 
@@ -97,29 +48,12 @@ The application sends telemetry data to Grafana Cloud. You can monitor:
 - Error rates
 - And more...
 
-## Troubleshooting
-
-To check the status of the deployment:
-```bash
-kubectl get pods
-```
-
-To view the logs:
-```bash
-kubectl logs -f <pod-name>
-```
-
-To restart the deployment (if you make changes to the ConfigMap):
-```bash
-kubectl rollout restart deployment demo-app
-```
-
 ## Security Notes
 
 - Never commit your actual API keys or secrets to version control
-- Always use base64 encoding for sensitive values in Kubernetes secrets
+- Always use appropriate security measures for your chosen deployment method
 - Regularly rotate your API keys and secrets
-- Use appropriate RBAC permissions in your Kubernetes cluster
+- Follow the security best practices in the respective deployment guides
 
 ## Contributing
 
