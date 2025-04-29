@@ -9,7 +9,7 @@ graph TD
     A[Demo App] -->|Makes API Calls| B[OpenAI]
     A -->|Stores/Queries Data| C[ChromaDB]
     A -->|Sends Telemetry| D[OpenLIT]
-    D -->|Forwards OTel Metrics and Traces| E[Grafana Cloud]
+    D -->|Forwards Metrics| E[Grafana Cloud]
     E -->|Visualizes| F[Dashboard]
 
     subgraph "Docker Container"
@@ -51,12 +51,12 @@ Edit the `.env` file with your actual credentials:
 Start the application using Docker Compose:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 To run in detached mode:
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 To view logs:
@@ -95,12 +95,12 @@ The application sends telemetry data to Grafana Cloud. You can monitor:
 
 To view logs:
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 To restart the application:
 ```bash
-docker-compose restart
+docker compose restart
 ```
 
 ## Security Notes
