@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+      - name: demo-app
+        image: python:3.9-slim
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /app
+          name: app-code
+        command: ["python", "/app/app.py"]
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: OTEL_EXPORTER_OTLP_ENDPOINT
+        - name: OTEL_EXPORTER_OTLP_HEADERS
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: OTEL_EXPORTER_OTLP_HEADERS
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: OPENAI_API_KEY
+      volumes:
+      - name: app-code
+        configMap:
+          name: demo-app-config
