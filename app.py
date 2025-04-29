@@ -1,0 +1,70 @@
+import openlit
+from openai import OpenAI
+import chromadb
+import time
+
+openlit.init()
+
+client = OpenAI()
+
+chroma_client = chromadb.Client()
+# Create a new collection named "openlit"
+collection = chroma_client.create_collection(name="openlit")
+
+def get_chat_completion_1():
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "Write a short 50 word story",
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+    return chat_completion
+
+def get_chat_completion_2():
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "What do you know about Grafana?",
+            }
+        ],
+        model="gpt-4",
+    )
+    return chat_completion
+
+def vectordb_ops():
+    # Add documents to the collection
+    collection.add(
+        documents=["This is a document", "This is another document"],
+        metadatas=[{"source": "my_source"}, {"source": "my_source"}],
+        ids=["id1", "id2"]
+    )
+
+    # Query the documents in the collection
+    collection.query(
+        query_texts=["This is a query document"],
+        n_results=2
+    )
+
+    # Delete a document from the collection
+    collection.delete(
+        ids=["id2"],
+        where={"source": "my_source"}
+    )
+
+while True:
+    try:
+        completion = get_chat_completion_1()
+        print(completion)  # or handle the response as needed
+
+        completion = get_chat_completion_2()
+        print(completion)  # or handle the response as needed
+        vectordb_ops()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    # Wait for 7200 seconds before running again
+    time.sleep(7200)
