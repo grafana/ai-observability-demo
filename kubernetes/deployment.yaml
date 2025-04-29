@@ -19,25 +19,29 @@ spec:
         - containerPort: 80
         volumeMounts:
         - mountPath: /app
-          name: app-code
-        command: ["python", "/app/app.py"]
+          name: demo-app
+        command: ["sh", "-c"]
+        args:
+        - |
+          pip install openlit openai chromadb &&
+          python /app/app.py
         env:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: demo-app
               key: OTEL_EXPORTER_OTLP_ENDPOINT
         - name: OTEL_EXPORTER_OTLP_HEADERS
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: demo-app
               key: OTEL_EXPORTER_OTLP_HEADERS
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: demo-app
               key: OPENAI_API_KEY
       volumes:
-      - name: app-code
+      - name: demo-app
         configMap:
-          name: demo-app-config
+          name: demo-app
